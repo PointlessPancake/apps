@@ -474,22 +474,49 @@ questions:
     schema:
       type: dict
       attrs:
-        # Also simplified, a port must have whole lot more attributes.
-        # See other apps for full example.
+        # Also simplified (descriptions trimmed), see other apps for a full example.
+        # The library reads `bind_mode` and `port_number`, keep these attribute names.
         - variable: web_port
           label: Web Port
           description: Port for the web interface
           schema:
             type: dict
             attrs:
-              - variable: port
+              - variable: bind_mode
+                label: Port Bind Mode
+                schema:
+                  type: string
+                  default: "published"
+                  enum:
+                    - value: "published"
+                      description: Publish port on the host for external access
+                    - value: "exposed"
+                      description: Expose port for inter-container communication
+                    - value: ""
+                      description: None
+              - variable: port_number
                 label: Port Number
                 schema:
                   type: int
                   default: 8080
-                  min: 1024
+                  min: 1
                   max: 65535
                   required: true
+              - variable: host_ips
+                label: Host IPs
+                description: IPs on the host to bind this port
+                schema:
+                  type: list
+                  show_if: [["bind_mode", "=", "published"]]
+                  default: []
+                  items:
+                    - variable: host_ip
+                      label: Host IP
+                      schema:
+                        type: string
+                        required: true
+                        $ref:
+                          - definitions/node_bind_ip
 
   # Storage Configuration
   - variable: storage
@@ -605,10 +632,10 @@ The `templates/docker-compose.yaml` file is a Jinja2 template that uses the libr
 {# Define the main application container #}
 {% set app = tpl.add_container(values.consts.app_container_name, "image") %}
 {% do app.set_user(values.run_as.user, values.run_as.group) %}
-{% do app.healthcheck.set_test("curl", {"port": 8080, "path": "/health"}) %}
+{% do app.healthcheck.set_test("curl", {"port": values.network.web_port.port_number, "path": "/health"}) %}
 
 {# Configure environment variables #}
-{% do app.environment.add_env("APP_PORT", values.network.web_port.port) %}
+{% do app.environment.add_env("APP_PORT", values.network.web_port.port_number) %}
 {% do app.environment.add_env("ADMIN_EMAIL", values.myapp.admin_email) %}
 
 {# Add port mappings #}
@@ -627,7 +654,7 @@ The `templates/docker-compose.yaml` file is a Jinja2 template that uses the libr
 {% endif %}
 
 {# Add portal for UI access #}
-{% do tpl.portals.add(values.network.web_port, scheme="http", path="/") %}
+{% do tpl.portals.add(values.network.web_port, {"scheme": "http", "path": "/"}) %}
 
 {# Render the final configuration #}
 {{ tpl.render() | tojson }}
