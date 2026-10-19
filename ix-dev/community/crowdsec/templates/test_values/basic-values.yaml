@@ -9,8 +9,6 @@ crowdsec:
   collections: []
   disable_online_api: false
   enroll_key: ""
-  enroll_instance_name: ""
-  bouncers: []
   additional_envs: []
 
 network:

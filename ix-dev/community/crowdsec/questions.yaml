@@ -61,43 +61,6 @@ questions:
             show_if: [["disable_online_api", "=", false]]
             default: ""
             private: true
-        - variable: enroll_instance_name
-          label: Console Instance Name
-          description: The name of this instance in the CrowdSec Console. Leave empty to use the default.
-          schema:
-            type: string
-            show_if: [["disable_online_api", "=", false]]
-            default: ""
-        - variable: bouncers
-          label: Bouncers
-          description: |
-            Bouncers to register with the Local API.</br>
-            The key is only used when the bouncer is first registered,
-            changing it afterwards has no effect.
-          schema:
-            type: list
-            default: []
-            items:
-              - variable: bouncer
-                label: Bouncer
-                schema:
-                  type: dict
-                  attrs:
-                    - variable: name
-                      label: Name
-                      description: The name of the bouncer.
-                      schema:
-                        type: string
-                        required: true
-                        valid_chars: "^[a-zA-Z0-9_]+$"
-                        valid_chars_error: Name can only contain letters, numbers and underscores.
-                    - variable: key
-                      label: API Key
-                      description: The API key the bouncer uses to connect to the Local API.
-                      schema:
-                        type: string
-                        required: true
-                        private: true
         - variable: additional_envs
           label: Additional Environment Variables
           schema:

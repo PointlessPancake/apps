@@ -11,10 +11,6 @@ crowdsec:
     - crowdsecurity/traefik
   disable_online_api: true
   enroll_key: ""
-  enroll_instance_name: ""
-  bouncers:
-    - name: traefik
-      key: traefik_bouncer_test_key_0123456789
   additional_envs: []
 
 network:

@@ -44,7 +44,6 @@ sources:
 - https://apps.truenas.com/catalog/crowdsec_community/
 - https://docs.crowdsec.net/
 - https://github.com/crowdsecurity/crowdsec
-- https://hub.docker.com/r/crowdsecurity/crowdsec
 title: CrowdSec
 train: community
 version: 1.0.0
