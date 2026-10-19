@@ -1,0 +1,28 @@
+images:
+  image:
+    repository: ghcr.io/ayaka-notes/overleaf-pro
+    tag: "6.3.1@sha256:720df6e3ad915fef98d5c6856dbc02a51cc017487381c487ca7788904b85c2d0"
+  mongodb_image:
+    repository: mongo
+    tag: "8.0.34@sha256:4a4ab5d4834207389e0d7270fac988e21ffedccecba77991a552f755df229907"
+  redis_image:
+    repository: valkey/valkey
+    tag: "9.1.2@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd"
+  container_utils_image:
+    repository: ixsystems/container-utils
+    tag: "1.0.2@sha256:46eba20714c1cc6784f60e245c32c33a2d9f616e47d804694a9854248c89a992"
+
+consts:
+  ayakaleaf_container_name: ayakaleaf-pro
+  mongodb_container_name: mongodb
+  redis_container_name: redis
+  perms_container_name: permissions
+  internal_web_port: 80
+  mongodb_port: 27017
+  mongodb_replica_set: overleaf
+  mongodb_database: sharelatex
+  notes_body: |
+    Open `/launchpad` to create the first administrator account.
+
+    The image only comes with a minimal TeX Live installation (scheme-basic),
+    some documents may need additional LaTeX packages to compile.
