@@ -19,7 +19,7 @@ categories:
 changelog_url: https://github.com/ayaka-notes/ayakaleaf-pro/releases
 date_added: '2026-10-19'
 description: An online LaTeX editor, based on Overleaf and enhanced with its Pro features.
-home: https://ayakaleaf-pro.ayaka.space/
+home: https://github.com/ayaka-notes/ayakaleaf-pro
 host_mounts: []
 icon: https://media.sys.truenas.net/apps/ayakaleaf-pro/icons/icon.png
 keywords:

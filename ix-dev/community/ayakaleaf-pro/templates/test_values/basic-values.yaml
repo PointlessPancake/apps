@@ -6,9 +6,6 @@ resources:
 TZ: Etc/UTC
 
 ayakaleaf:
-  app_name: Ayakaleaf Pro
-  site_url: http://localhost:8080
-  admin_email: admin@example.com
   invite_token_secret: test_invite_token_secret_0123456789
   redis_password: test_redis_password
   additional_envs: []

@@ -27,27 +27,6 @@ questions:
     schema:
       type: dict
       attrs:
-        - variable: app_name
-          label: Application Name
-          description: The name of the instance, shown in the page titles and emails.
-          schema:
-            type: string
-            default: Ayakaleaf Pro
-            required: true
-        - variable: site_url
-          label: Site URL
-          description: |
-            The public URL of the instance, for example "https://latex.example.com".</br>
-            Used to build the links in emails and invites.
-          schema:
-            type: uri
-            default: ""
-        - variable: admin_email
-          label: Administrator Email
-          description: The contact email address shown to users.
-          schema:
-            type: string
-            default: ""
         - variable: invite_token_secret
           label: Invite Token Secret
           description: |
@@ -61,14 +40,11 @@ questions:
             min_length: 16
         - variable: redis_password
           label: Redis Password
-          description: The password for Redis.
           schema:
             type: string
             default: ""
             required: true
             private: true
-            valid_chars: "^[^ '#]+$"
-            valid_chars_error: Password cannot contain spaces, single quotes or hashes.
         - variable: additional_envs
           label: Additional Environment Variables
           schema:
@@ -185,8 +161,8 @@ questions:
                                     enum:
                                       - value: ayakaleaf-pro
                                         description: ayakaleaf-pro
-                                      - value: mongodb
-                                        description: mongodb
+                                      - value: mongo
+                                        description: mongo
                                       - value: redis
                                         description: redis
                                 - variable: config
@@ -662,8 +638,8 @@ questions:
                         enum:
                           - value: ayakaleaf-pro
                             description: ayakaleaf-pro
-                          - value: mongodb
-                            description: mongodb
+                          - value: mongo
+                            description: mongo
                           - value: redis
                             description: redis
   - variable: resources

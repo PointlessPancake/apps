@@ -7,8 +7,8 @@
 {% set perms = tpl.deps.perms(values.consts.perms_container_name) %}
 
 {# MongoDB, Ayakaleaf Pro needs a replica set for transactions #}
-{% set mongodb = tpl.add_container(values.consts.mongodb_container_name, "mongodb_image") %}
-{% set mongodb_host = "%s:%d" | format(values.consts.mongodb_container_name, values.consts.mongodb_port) %}
+{% set mongodb = tpl.add_container(values.consts.mongo_container_name, "mongo_image") %}
+{% set mongodb_host = "%s:%d" | format(values.consts.mongo_container_name, values.consts.mongodb_port) %}
 {% set rs_init = "rs.initiate({_id: '%s', members: [{_id: 0, host: '%s'}]})" | format(values.consts.mongodb_replica_set, mongodb_host) %}
 {% do mongodb.add_network(internal_net) %}
 {% do mongodb.set_user(568, 568) %}
@@ -32,16 +32,9 @@
 {% do c1.healthcheck.set_test("curl", {"port": values.consts.internal_web_port, "path": "/status"}) %}
 {% do c1.healthcheck.set_start_period(120) %}
 {% do c1.set_grace_period(60) %}
-{% do c1.depends.add_dependency(values.consts.mongodb_container_name, "service_healthy") %}
+{% do c1.depends.add_dependency(values.consts.mongo_container_name, "service_healthy") %}
 {% do c1.depends.add_dependency(values.consts.redis_container_name, "service_healthy") %}
 
-{% do c1.environment.add_env("OVERLEAF_APP_NAME", values.ayakaleaf.app_name) %}
-{% if values.ayakaleaf.site_url %}
-  {% do c1.environment.add_env("OVERLEAF_SITE_URL", values.ayakaleaf.site_url) %}
-{% endif %}
-{% if values.ayakaleaf.admin_email %}
-  {% do c1.environment.add_env("OVERLEAF_ADMIN_EMAIL", values.ayakaleaf.admin_email) %}
-{% endif %}
 {% do c1.environment.add_env("OVERLEAF_INVITE_TOKEN_SECRET", values.ayakaleaf.invite_token_secret) %}
 {% do c1.environment.add_env("OVERLEAF_MONGO_URL", "mongodb://%s/%s" | format(mongodb_host, values.consts.mongodb_database)) %}
 {# Some services read the REDIS_* variables instead of the OVERLEAF_REDIS_* ones #}
