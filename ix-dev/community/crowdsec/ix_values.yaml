@@ -1,0 +1,25 @@
+images:
+  image:
+    repository: ghcr.io/crowdsecurity/crowdsec
+    tag: "v1.8.1@sha256:0f2523fa61ef507f15d953045cface490cc880670c62f2755ced17524107f71a"
+
+consts:
+  crowdsec_container_name: crowdsec
+  lapi_port: 8080
+  metrics_port: 6060
+  appsec_port: 7422
+  notes_body: |
+    CrowdSec only detects attacks in the logs it is told to read.
+
+    To parse the logs of other apps or of the host:
+
+    1. Mount the log directories with **Additional Storage** (read only is recommended).
+    2. Add an acquisition file in the `acquis.d` directory of the **CrowdSec Configuration Storage**,
+       pointing to the mounted logs. See https://docs.crowdsec.net/docs/next/log_processor/data_sources/intro
+    3. Add the matching collection (for example `crowdsecurity/nginx`) to **Collections** and restart the app.
+
+    Bouncers connect to the Local API with an API key, either set in **Bouncers** or generated with
+    `cscli bouncers add <name>` from the container shell.
+
+    To use the AppSec component, add an AppSec acquisition file listening on `0.0.0.0:7422`
+    and set the bind mode of the **AppSec Port**.

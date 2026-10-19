@@ -1,0 +1,11 @@
+categories:
+- security
+icon_url: https://media.sys.truenas.net/apps/crowdsec/icons/icon.png
+screenshots: []
+tags:
+- security
+- ids
+- ips
+- firewall
+- waf
+- crowdsec

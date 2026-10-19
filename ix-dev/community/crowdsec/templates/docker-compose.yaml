@@ -1,0 +1,38 @@
+{% set tpl = ix_lib.base.render.Render(values) %}
+
+{% set c1 = tpl.add_container(values.consts.crowdsec_container_name, "image") %}
+{% do c1.set_user(0, 0) %}
+{% do c1.add_caps(["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"]) %}
+{% do c1.healthcheck.set_test("wget", {"port": values.consts.lapi_port, "path": "/health"}) %}
+{% do c1.healthcheck.set_start_period(60) %}
+
+{% do c1.environment.add_env("DISABLE_LOCAL_API", false) %}
+{% do c1.environment.add_env("METRICS_PORT", values.consts.metrics_port) %}
+{% do c1.environment.add_env("DISABLE_ONLINE_API", values.crowdsec.disable_online_api) %}
+{% if values.crowdsec.collections %}
+  {% do c1.environment.add_env("COLLECTIONS", values.crowdsec.collections | join(" ")) %}
+{% endif %}
+{% if not values.crowdsec.disable_online_api and values.crowdsec.enroll_key %}
+  {% do c1.environment.add_env("ENROLL_KEY", values.crowdsec.enroll_key) %}
+  {% if values.crowdsec.enroll_instance_name %}
+    {% do c1.environment.add_env("ENROLL_INSTANCE_NAME", values.crowdsec.enroll_instance_name) %}
+  {% endif %}
+{% endif %}
+{% for bouncer in values.crowdsec.bouncers %}
+  {% do c1.environment.add_env("BOUNCER_KEY_%s" | format(bouncer.name), bouncer.key) %}
+{% endfor %}
+{% do c1.environment.add_user_envs(values.crowdsec.additional_envs) %}
+
+{% do c1.add_port(values.network.lapi_port, {"container_port": values.consts.lapi_port}) %}
+{% do c1.add_port(values.network.metrics_port, {"container_port": values.consts.metrics_port}) %}
+{% do c1.add_port(values.network.appsec_port, {"container_port": values.consts.appsec_port}) %}
+
+{% do c1.add_storage("/etc/crowdsec", values.storage.config) %}
+{% do c1.add_storage("/var/lib/crowdsec/data", values.storage.data) %}
+{% for store in values.storage.additional_storage %}
+  {% do c1.add_storage(store.mount_path, store) %}
+{% endfor %}
+
+{% do tpl.notes.set_body(values.consts.notes_body) %}
+
+{{ tpl.render() | tojson }}
